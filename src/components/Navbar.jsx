@@ -1,43 +1,38 @@
-import { Bell } from "lucide-react";
-import Notification from "@/components/icons/notification.svg";
+import { FiBell } from "react-icons/fi";
 
-export default function Navbar() {
+export default function Navbar({ user }) {
   return (
-    <div className="flex justify-end items-center px-6 py-4 bg-white border-b border-gray-200">
+    <div className="flex justify-end items-center px-4 py-2 bg-white border-b border-gray-200">
+      
+      {/* Notification Bell */}
+      <div className="relative">
+        <div className="p-1.5 rounded-full hover:bg-gray-100 cursor-pointer transition-colors">
+          <FiBell className="w-4 h-4 text-gray-600" />
+        </div>
+        <span className="absolute top-0.5 right-0.5 block h-1.5 w-1.5 rounded-full bg-red-500"></span>
+      </div>
 
-      {/* Right side - Notifications and Profile */}
-      <div className="flex items-center gap-4">
-         <button className="focus:outline-none">
-      <img 
-        src={Notification} 
-        alt="Notification" 
-        className="w-5 h-5" 
-      />
-    </button>
+      {/* Divider */}
+      <div className="w-px h-6 bg-gray-200 mx-3"></div>
 
-
-        {/* Divider */}
-        <div className="w-px h-8 bg-gray-200"></div>
-
-        {/* Profile Section */}
-        <div className="flex items-center gap-3">
-          {/* Profile Info */}
-          <div className="text-right">
-            <div className="text-sm font-medium text-gray-900">Monday Sunday</div>
-            <div className="text-xs text-gray-500 uppercase tracking-wide">STUDENT</div>
+      {/* Profile Section */}
+      <div className="flex items-center gap-2">
+        <div className="text-right">
+          <div className="text-sm font-medium text-gray-900 leading-none">
+            {user?.name || "Guest User"}
           </div>
-
-          {/* Profile Image */}
-          <div className="relative">
-            <img
-              src="https://i.pravatar.cc/40"
-              alt="Monday Sunday"
-              className="w-10 h-10 rounded-full border-2 border-gray-200 object-cover"
-            />
-            {/* Online Status Indicator */}
-            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
+          <div className="text-[10px] text-gray-500 uppercase tracking-wide leading-none">
+            {user?.role || "STUDENT"}
           </div>
+        </div>
 
+        <div className="relative">
+          <img
+            src={user?.avatar || "https://i.pravatar.cc/36"}
+            alt={user?.name || "Guest User"}
+            className="w-9 h-9 rounded-full border border-gray-200 object-cover"
+          />
+          <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-400 border-2 border-white rounded-full"></span>
         </div>
       </div>
     </div>
