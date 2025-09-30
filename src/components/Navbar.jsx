@@ -2,7 +2,8 @@ import { FiBell } from "react-icons/fi";
 
 export default function Navbar({ user }) {
   return (
-    <div className="flex justify-end items-center px-4 py-2 bg-white border-b border-gray-200">
+    <div className="h-full flex justify-end items-center px-6 bg-white border-b border-gray-200">
+      {/* Changed from px-4 py-2 to h-full */}
       
       {/* Notification Bell */}
       <div className="relative">
@@ -12,7 +13,8 @@ export default function Navbar({ user }) {
         <span className="absolute top-0.5 right-0.5 block h-1.5 w-1.5 rounded-full bg-red-500"></span>
       </div>
 
-      {/* Divider */}
+      {/* Rest of your code... */}
+{/* Divider */}
       <div className="w-px h-6 bg-gray-200 mx-3"></div>
 
       {/* Profile Section */}
@@ -38,3 +40,4 @@ export default function Navbar({ user }) {
     </div>
   );
 }
+

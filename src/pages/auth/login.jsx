@@ -35,7 +35,7 @@ export default function Login() {
       <div className="absolute inset-0 bg-black/20"></div>
 
       {/* Login container */}
-      <div className="relative z-10 w-full max-w-sm sm:max-w-md h-auto bg-white/95 backdrop-blur-md shadow-xl rounded-2xl p-5 sm:p-6 mx-4">
+      <div className="relative z-10 w-full max-w-sm sm:max-w-md h-auto bg-white/95 backdrop-blur-md shadow-xl rounded-2xl p-5 sm:p-6 ">
         {/* Logo */}
         <div className="flex justify-center mb-4">
           <img src={ExamLogo} alt="Exam Logo" className="h-10 w-auto" />
@@ -123,7 +123,7 @@ export default function Login() {
         </form>
 
         {/* Link to Register */}
-        <p className="mt-4 text-center text-sm text-gray-600">
+        {/* <p className="mt-4 text-center text-sm text-gray-600">
           Don't have an account?{" "}
           <span
             onClick={handleSignUpClick}
@@ -131,7 +131,7 @@ export default function Login() {
           >
             Sign Up
           </span>
-        </p>
+        </p> */}
       </div>
     </div>
   );

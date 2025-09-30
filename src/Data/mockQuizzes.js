@@ -1,0 +1,42 @@
+export const quizzes = [
+  {
+    id: 1,
+    title: "Data Science Practice Quiz",
+    subject: "Computer Science",
+    questions: 20,
+    duration: 30, // in minutes
+    status: "Completed",
+    score: 85,
+    date: "2025-09-25",
+  },
+  {
+    id: 2,
+    title: "Java Fundamentals Quiz",
+    subject: "Computer Science",
+    questions: 15,
+    duration: 20,
+    status: "Completed",
+    score: 90,
+    date: "2025-09-24",
+  },
+  {
+    id: 3,
+    title: "HTML & CSS Basics",
+    subject: "Web Development",
+    questions: 25,
+    duration: 40,
+    status: "Completed",
+    score: 78,
+    date: "2025-09-23",
+  },
+  {
+    id: 4,
+    title: "React JS Intro Quiz",
+    subject: "Web Development",
+    questions: 10,
+    duration: 15,
+    status: "Completed",
+    score: 95,
+    date: "2025-09-22",
+  },
+];
