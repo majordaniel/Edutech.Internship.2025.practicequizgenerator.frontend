@@ -338,7 +338,7 @@ export default function CreateQuiz() {
             className={`w-full py-3 rounded font-medium text-white ${
               isLoading
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-orange-500 hover:bg-orange-600"
+                : "bg-gray-500 hover:bg-orange-600"
             } flex items-center justify-center gap-2`}
           >
             {isLoading ? (

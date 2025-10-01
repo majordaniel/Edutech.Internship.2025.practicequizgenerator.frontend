@@ -19,7 +19,6 @@ export default function Sidebar() {
     }, 1000);
   };
 
-  // Sidebar.jsx (update root div classes)
  return (
     <div className="bg-black h-full shadow-sm border-r border-gray-800 flex flex-col">
       {/* Change min-h-screen to h-full */}
