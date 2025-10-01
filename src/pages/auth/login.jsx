@@ -38,14 +38,14 @@ export default function Login() {
       <div className="relative z-10 w-full max-w-sm sm:max-w-md h-auto bg-white/95 backdrop-blur-md shadow-xl rounded-2xl p-5 sm:p-6 ">
         {/* Logo */}
         <div className="flex justify-center mb-4">
-          <img src={ExamLogo} alt="Exam Logo" className="h-10 w-auto" />
+          <img src={ExamLogo} alt="Exam Logo" className="h-20 w-auto" />
         </div>
 
         {/* Title */}
         <div className="text-center mb-4">
-          <h1 className="text-xl sm:text-xl font-semibold text-gray-900 mb-1">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-1">
             Welcome to Exam Portal
-          </h1>
+          </h2>
           <p className="text-gray-500 text-sm">
             Enter your credentials to access your dashboard
           </p>
