@@ -1,13 +1,31 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function QuizScreen() {
+export default function FormScreen() {
   const [showUpload, setShowUpload] = useState(false);
   const [fileName, setFileName] = useState("");
+  const [title, setTitle] = useState("");
+  const [duration, setDuration] = useState("");
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setFileName(e.target.files[0].name);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // For now just mock exam data
+    const examData = {
+      title: title || "Mock Exam",
+      duration: duration || 60,
+      file: fileName || null,
+    };
+
+    // Navigate to QuizScreen and pass data
+    navigate("/quiz", { state: examData });
   };
 
   return (
@@ -18,20 +36,22 @@ export default function QuizScreen() {
           Set Up Mock Exam
         </h2>
 
-        {/* Program & Subject section */}
+        {/* Program & Subject */}
         <div className="flex justify-between mb-4">
           <p className="font-medium text-gray-700">Program: Computer Science</p>
           <p className="font-medium text-gray-700">Course: CSC 301</p>
         </div>
 
         {/* Form */}
-        <form className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Exam Title
             </label>
             <input
               type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter exam title"
               className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
@@ -43,6 +63,8 @@ export default function QuizScreen() {
             </label>
             <input
               type="number"
+              value={duration}
+              onChange={(e) => setDuration(e.target.value)}
               placeholder="e.g., 60"
               className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
@@ -75,7 +97,6 @@ export default function QuizScreen() {
                   file:bg-indigo-50 file:text-indigo-600
                   hover:file:bg-indigo-100"
               />
-              {/* Display uploaded file name */}
               {fileName && (
                 <p className="mt-2 text-sm text-gray-600">
                   Uploaded: <span className="font-medium">{fileName}</span>
