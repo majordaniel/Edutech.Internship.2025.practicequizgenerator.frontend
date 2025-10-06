@@ -21,7 +21,7 @@ export default function Navbar({ user }) {
       <div className="flex items-center gap-2">
         <div className="text-right">
           <div className="text-sm font-medium text-gray-900 leading-none">
-            {user?.name || "Dave smith"}
+            {user?.name || "David smith"}
           </div>
           <div className="text-[10px] text-gray-500 uppercase tracking-wide leading-none">
             {user?.role || "STUDENT"}

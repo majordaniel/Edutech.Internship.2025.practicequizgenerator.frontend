@@ -5,9 +5,75 @@ export default function QuizScreen() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Use questions and timer from CreateQuiz
-  const questions = location.state?.questions || [];
-  const timerValue = location.state?.timer || 0; // in minutes
+  // Mock questions for "Past Exams"
+  const mockQuestions = [
+    {
+      question: "What is the capital of Nigeria?",
+      options: ["Abuja", "Lagos", "Port Harcourt", "Kano"],
+      correctAnswer: "Abuja",
+    },
+    {
+      question: "Which data structure uses FIFO?",
+      options: ["Stack", "Queue", "Array", "Tree"],
+      correctAnswer: "Queue",
+    },
+    {
+      question: "Which gas do plants absorb during photosynthesis?",
+      options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+      correctAnswer: "Carbon dioxide",
+    },
+    {
+      question: "Who is the father of modern computer science?",
+      options: ["Charles Babbage", "Alan Turing", "Bill Gates", "Steve Jobs"],
+      correctAnswer: "Alan Turing",
+    },
+    {
+      question: "Which HTML tag is used for the largest heading?",
+      options: ["<h6>", "<h1>", "<header>", "<head>"],
+      correctAnswer: "<h1>",
+    },
+    {
+      question: "In Java, which keyword is used to inherit a class?",
+      options: ["this", "super", "extends", "implements"],
+      correctAnswer: "extends",
+    },
+    {
+      question: "What does CSS stand for?",
+      options: [
+        "Computer Style Sheets",
+        "Cascading Style Sheets",
+        "Creative Styling System",
+        "Central Styling Source",
+      ],
+      correctAnswer: "Cascading Style Sheets",
+    },
+    {
+      question: "Which organ purifies blood in the human body?",
+      options: ["Heart", "Liver", "Kidney", "Lungs"],
+      correctAnswer: "Kidney",
+    },
+    {
+      question: "What is 15 × 12?",
+      options: ["160", "170", "180", "190"],
+      correctAnswer: "180",
+    },
+    {
+      question: "Which planet is known as the Red Planet?",
+      options: ["Mars", "Venus", "Jupiter", "Mercury"],
+      correctAnswer: "Mars",
+    },
+  ];
+
+  // Check mode from location.state
+  const mode = location.state?.mode;
+
+  // Use mock questions if mode is "past-exams", otherwise use generated questions
+  const questions =
+    mode === "past-exams"
+      ? mockQuestions
+      : location.state?.questions || [];
+
+  const timerValue = location.state?.timer || 30; // in minutes, default 30
 
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState(null);
@@ -50,7 +116,9 @@ export default function QuizScreen() {
   const lastQuestion = current === questions.length - 1;
 
   const handleNext = () => {
-    if (selected) setAnswers({ ...answers, [current]: selected });
+    if (selected) {
+      setAnswers({ ...answers, [current]: selected });
+    }
     if (!lastQuestion) {
       setCurrent(current + 1);
       setSelected(answers[current + 1] || null);
@@ -60,7 +128,8 @@ export default function QuizScreen() {
   };
 
   const handleSubmit = () => {
-    const updatedAnswers = { ...answers, [current]: selected };
+    // Include current selection in final answers
+    const updatedAnswers = selected ? { ...answers, [current]: selected } : answers;
 
     // Save quiz result
     const quizResult = {
@@ -82,7 +151,8 @@ export default function QuizScreen() {
     // Update stats
     const totalQuizzes = storedQuizzes.length + 1;
     const averageScore = Math.round(
-      (storedQuizzes.reduce((sum, q) => sum + parseInt(q.score || 0), parseInt(quizResult.score || 0))) / totalQuizzes
+      (storedQuizzes.reduce((sum, q) => sum + parseInt(q.score || 0), parseInt(quizResult.score || 0))) /
+        totalQuizzes
     );
     const lastScore = quizResult.score;
     const updatedStats = [
@@ -108,9 +178,13 @@ export default function QuizScreen() {
     <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center px-6 py-4 border-b">
-        <h1 className="text-xl font-bold text-gray-800">Practice Quiz</h1>
+        <h1 className="text-xl font-bold text-gray-800">
+          {mode === "past-exams" ? "Past Exams Quiz" : "Practice Quiz"}
+        </h1>
         <div className="flex items-center text-gray-600 text-sm font-medium gap-4">
-          <span>{answeredCount}/{questions.length} answered</span>
+          <span>
+            {answeredCount}/{questions.length} answered
+          </span>
           <span className="flex items-center gap-1 text-orange-500 font-semibold">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -138,7 +212,14 @@ export default function QuizScreen() {
 
         <div className="space-y-3 mb-8">
           {questions[current].options.map((opt, i) => (
-            <label key={i} className={`flex items-center p-4 rounded-xl cursor-pointer text-sm transition border ${selected === opt ? "bg-orange-100 border-orange-400" : "bg-gray-50 border-gray-200 hover:bg-gray-100"}`}>
+            <label
+              key={i}
+              className={`flex items-center p-4 rounded-xl cursor-pointer text-sm transition border ${
+                selected === opt
+                  ? "bg-orange-100 border-orange-400"
+                  : "bg-gray-50 border-gray-200 hover:bg-gray-100"
+              }`}
+            >
               <input type="radio" checked={selected === opt} onChange={() => setSelected(opt)} className="mr-3" />
               {opt}
             </label>
@@ -146,7 +227,15 @@ export default function QuizScreen() {
         </div>
 
         <div className="flex justify-end">
-          <button onClick={handleNext} disabled={!selected} className={`px-8 py-3 rounded-xl text-sm font-medium flex items-center transition ${selected ? "bg-orange-500 text-white hover:bg-orange-600" : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}>
+          <button
+            onClick={handleNext}
+            disabled={!selected}
+            className={`px-8 py-3 rounded-xl text-sm font-medium flex items-center transition ${
+              selected
+                ? "bg-orange-500 text-white hover:bg-orange-600"
+                : "bg-gray-200 text-gray-400 cursor-not-allowed"
+            }`}
+          >
             {lastQuestion ? "Submit" : "Next"}
             <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -160,7 +249,20 @@ export default function QuizScreen() {
         <h3 className="text-xs font-semibold text-gray-600 mb-2">Question Navigator</h3>
         <div className="flex gap-2 flex-wrap">
           {questions.map((_, i) => (
-            <button key={i} onClick={() => { setCurrent(i); setSelected(answers[i] || null); }} className={`w-8 h-8 rounded-full text-xs font-medium transition ${current === i ? "bg-orange-500 text-white" : answers[i] ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500 hover:bg-gray-200"}`}>
+            <button
+              key={i}
+              onClick={() => {
+                setCurrent(i);
+                setSelected(answers[i] || null);
+              }}
+              className={`w-8 h-8 rounded-full text-xs font-medium transition ${
+                current === i
+                  ? "bg-orange-500 text-white"
+                  : answers[i]
+                  ? "bg-green-100 text-green-700"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              }`}
+            >
               {i + 1}
             </button>
           ))}
@@ -180,11 +282,21 @@ export default function QuizScreen() {
             </div>
             <h2 className="text-lg font-bold">Confirm Submit</h2>
             <p className="text-gray-600 text-sm">
-              You have answered {Object.keys(answers).length + (selected ? 1 : 0)} out of {questions.length} questions.
+              You have answered {selected && !answers[current] ? Object.keys(answers).length + 1 : Object.keys(answers).length} out of {questions.length} questions.
             </p>
             <div className="flex gap-4 justify-center mt-4">
-              <button onClick={handleSubmit} className="bg-orange-500 text-white px-6 py-2 rounded-xl font-medium hover:bg-orange-600 transition">Submit</button>
-              <button onClick={() => setShowConfirm(false)} className="border border-gray-300 text-gray-600 px-6 py-2 rounded-xl font-medium hover:bg-gray-100 transition">Cancel</button>
+              <button
+                onClick={handleSubmit}
+                className="bg-orange-500 text-white px-6 py-2 rounded-xl font-medium hover:bg-orange-600 transition"
+              >
+                Submit
+              </button>
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="border border-gray-300 text-gray-600 px-6 py-2 rounded-xl font-medium hover:bg-gray-100 transition"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

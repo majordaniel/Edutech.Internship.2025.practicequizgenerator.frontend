@@ -43,7 +43,7 @@ export default function CreateQuiz() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [modalStep, setModalStep] = useState(1); // 1 = loading, 2 = success
+  const [modalStep, setModalStep] = useState(1);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -53,6 +53,13 @@ export default function CreateQuiz() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    
+    // If "From Past Exams" is selected, navigate directly to QuizScreen with mock data
+    if (source === "past") {
+      navigate("/quiz", { state: { mode: "past-exams" } });
+      return;
+    }
+    
     if (numQuestions <= 5) {
       setError("Number of questions must be greater than 5");
       return;
@@ -88,7 +95,6 @@ export default function CreateQuiz() {
       const questions = response.data.data?.questions || [];
       if (!questions.length) throw new Error("No questions returned from backend");
 
-      // Save quiz to localStorage for real-time updates
       const email = localStorage.getItem("loggedInUserEmail");
       if (email) {
         const newQuiz = {
@@ -119,11 +125,10 @@ export default function CreateQuiz() {
 
   return (
     <div className="w-full min-h-screen bg-gray-100 py-8 px-4">
-      {/* Header */}
       <div className="text-center mb-4">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Set up Mock Exam</h1>
         <div className="inline-flex items-center gap-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1 bg-orange-500 rounded-2xl text-white-500 text-sm font-medium">
+          <div className="inline-flex items-center gap-2 px-4 py-1 bg-orange-500 rounded-2xl text-white text-sm font-medium">
             Program
           </div>
           <div className="inline-flex items-center gap-1 px-4 py-2 font-medium">
@@ -132,7 +137,6 @@ export default function CreateQuiz() {
         </div>
       </div>
 
-      {/* Form */}
       <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-sm p-6 mt-6">
         {error && (
           <div className="mb-6 bg-red-50 border border-red-200 rounded p-3 flex items-start gap-2">
@@ -141,7 +145,6 @@ export default function CreateQuiz() {
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Course */}
           <div>
             <label className="block text-gray-900 text-sm font-medium mb-2">Select Course</label>
             <select
@@ -156,7 +159,6 @@ export default function CreateQuiz() {
             </select>
           </div>
 
-          {/* Question Type */}
           <div>
             <label className="block text-gray-900 text-sm font-medium mb-2">Question Type</label>
             <div className="flex gap-3">
@@ -174,18 +176,22 @@ export default function CreateQuiz() {
             </div>
           </div>
 
-          {/* Number of Questions & Timer */}
           <div className="grid grid-cols-2 gap-4">
             <Stepper label="Number of Questions" min={1} max={50} value={numQuestions} onChange={setNumQuestions} />
             <Stepper label="Timer (mins)" min={10} max={120} value={timer} onChange={setTimer} />
           </div>
 
-          {/* Question Source */}
           <div className="space-y-3">
             <label className="block text-gray-900 text-sm font-medium mb-2">Question Source</label>
             <div className="border border-gray-300 rounded p-4 w-[60%] ml-4">
-              <label className="flex items-l gap-3 cursor-pointer">
-                <input type="radio" name="source" value="past" checked={source === "past"} onChange={(e) => setSource(e.target.value)} />
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input 
+                  type="radio" 
+                  name="source" 
+                  value="past" 
+                  checked={source === "past"} 
+                  onChange={(e) => setSource(e.target.value)} 
+                />
                 <Folder className="w-5 h-5 text-orange-500" />
                 <span className="text-sm font-medium">From Past Exams</span>
               </label>
@@ -199,7 +205,6 @@ export default function CreateQuiz() {
             </div>
           </div>
 
-          {/* File Upload */}
           {source === "upload" && (
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
               <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
@@ -222,19 +227,17 @@ export default function CreateQuiz() {
             </div>
           )}
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={isLoading}
             className={`w-full py-3 rounded font-medium text-white ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-orange-500 hover:bg-orange-600"} flex items-center justify-center gap-2`}
           >
             {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-            {isLoading ? "Generating Quiz..." : "Generate and Start Quiz"}
+            {isLoading ? "Generating Quiz..." : source === "past" ? "Start Quiz" : "Generate and Start Quiz"}
           </button>
         </form>
       </div>
 
-      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full text-center">
@@ -261,24 +264,23 @@ export default function CreateQuiz() {
                   >
                     Review Selections
                   </button>
-                  {/* Start Quiz */}
-            <button
-              onClick={() => {
-                setShowModal(false);
-                navigate("/quiz", {
-                  state: {
-                    questions: window.generatedQuestions,
-                    timer: timer, // send in minutes directly
-                    quizName: course || "Quiz",
-                    subject: course || "General",
-                  },
-                });
-              }}
-              className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
-            >
-              Start Quiz
-            </button>
-
+                  <button
+                    onClick={() => {
+                      setShowModal(false);
+                      navigate("/quiz", {
+                        state: {
+                          mode: "generated",
+                          questions: window.generatedQuestions,
+                          timer: timer,
+                          quizName: course || "Quiz",
+                          subject: course || "General",
+                        },
+                      });
+                    }}
+                    className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+                  >
+                    Start Quiz
+                  </button>
                 </div>
               </>
             )}

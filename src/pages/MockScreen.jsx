@@ -3,6 +3,9 @@ import QuizCard from "../components/QuizCard";
 import { quizzes } from "../Data/mockQuizzes";
 import { Award, BarChart2, FileText, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { users } from "@/data/mockDB";
+
+
 
 // Inline StatCard component
 function StatCard({ title, value, icon: Icon, color }) {
@@ -50,8 +53,11 @@ const stats = [
   },
 ];
 
+
+
 const MockScreen = () => {
   const navigate = useNavigate();
+  const user = users[2];
   
   return (
     <div className="space-y-6 mt-6"> {/* Remove min-h-screen bg-gray-50 px-6 */}
@@ -61,7 +67,7 @@ const MockScreen = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
         <div>
           <span className="text-orange-500 font-medium">Welcome Back, </span>
-          <span className="text-gray-700 font-medium">Monday</span>
+          <span className="text-gray-700 font-medium">{user.name}</span>
           <div className="text-xs text-gray-500 mt-1">
             ST-ID-MAT-0098-23402025
           </div>
@@ -136,5 +142,6 @@ const MockScreen = () => {
       </div>
   );
 };
+
 
 export default MockScreen;
