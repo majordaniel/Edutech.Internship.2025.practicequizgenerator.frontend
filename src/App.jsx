@@ -3,7 +3,7 @@ import Login from "./pages/auth/login";
 import Dashboard from "./pages/Dashboard";
 import MockScreen from "./pages/MockScreen";
 import CreateQuiz from "./pages/CreateQuiz";
-import FormScreen from "./pages/quizscreen/FormScreen";
+// import FormScreen from "./pages/quizscreen/FormScreen";
 import QuizScreen from "./pages/quizscreen/QuizScreen";       // updated path
 import ResultPage from "./pages/quizscreen/ResultPage";       // added
 import Layout from "./components/layout/Layouts";
@@ -29,7 +29,7 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/mock" element={<MockScreen />} />
         <Route path="/create-quiz" element={<CreateQuiz />} />
-        <Route path="/form" element={<FormScreen />} />
+        {/* <Route path="/form" element={<FormScreen />} /> */}
         <Route path="/quiz" element={<QuizScreen />} />
         <Route path="/quiz/result" element={<ResultPage />} />   {/* new */}
       </Route>

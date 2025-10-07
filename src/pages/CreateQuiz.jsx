@@ -10,8 +10,8 @@ function Stepper({ label, min = 1, max = 100, value, onChange }) {
 
   return (
     <div>
-      <label className="block text-gray-900 text-sm font-medium mb-2">{label}</label>
-      <div className="flex items-center border border-gray-300 rounded px-3 py-2">
+      <label className="block text-gray-900 text-sm font-semibold mb-2">{label}</label>
+      <div className="flex items-center border border-gray-300 rounded px-3 py-2 bg-white">
         <input
           type="number"
           value={value}
@@ -22,14 +22,14 @@ function Stepper({ label, min = 1, max = 100, value, onChange }) {
         />
         <div className="flex flex-col ml-2">
           <button type="button" onClick={() => updateValue(value + 1)} className="p-0.5 hover:bg-gray-100 rounded">
-            <ChevronUp className="w-4 h-4 text-gray-600" />
+            <ChevronUp className="w-3.5 h-3.5 text-gray-600" />
           </button>
           <button type="button" onClick={() => updateValue(value - 1)} className="p-0.5 hover:bg-gray-100 rounded">
-            <ChevronDown className="w-4 h-4 text-gray-600" />
+            <ChevronDown className="w-3.5 h-3.5 text-gray-600" />
           </button>
         </div>
       </div>
-      <p className="text-xs text-gray-500 mt-1">Minimum {min}. Maximum {max} {label.toLowerCase()}</p>
+      <p className="text-xs text-gray-500 mt-1.5">Minimum {min}. Maximum {max} {label.toLowerCase()}</p>
     </div>
   );
 }
@@ -124,33 +124,33 @@ export default function CreateQuiz() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-100 py-8 px-4">
-      <div className="text-center mb-4">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Set up Mock Exam</h1>
-        <div className="inline-flex items-center gap-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1 bg-orange-500 rounded-2xl text-white text-sm font-medium">
+    <div className="w-full min-h-screen bg-gray-50 py-8 px-4">
+      <div className="text-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 mb-3">Set up Mock Exam</h1>
+        <div className="inline-flex items-center gap-2">
+          <span className="px-4 py-1 bg-orange-500 rounded-full text-white text-sm font-medium">
             Program
-          </div>
-          <div className="inline-flex items-center gap-1 px-4 py-2 font-medium">
+          </span>
+          <span className="text-gray-700 text-sm font-medium">
             Computer Science
-          </div>
+          </span>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-sm p-6 mt-6">
+      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm p-8">
         {error && (
           <div className="mb-6 bg-red-50 border border-red-200 rounded p-3 flex items-start gap-2">
             <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
             <p className="text-red-700 text-sm">{error}</p>
           </div>
         )}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-7">
           <div>
-            <label className="block text-gray-900 text-sm font-medium mb-2">Select Course</label>
+            <label className="block text-gray-900 text-sm font-semibold mb-2">Select Course</label>
             <select
               value={course}
               onChange={(e) => setCourse(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2.5 text-sm"
+              className="w-full border border-gray-300 rounded px-3 py-2.5 text-sm text-gray-600 focus:outline-none focus:border-orange-500"
             >
               <option value="">Choose a course from your program</option>
               <option value="course1">Introduction to Programming</option>
@@ -160,16 +160,30 @@ export default function CreateQuiz() {
           </div>
 
           <div>
-            <label className="block text-gray-900 text-sm font-medium mb-2">Question Type</label>
-            <div className="flex gap-3">
-              {["mcq", "theory", "mixed"].map((type) => (
+            <label className="block text-gray-900 text-sm font-semibold mb-3">Question Type</label>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { value: "mcq", label: "Multiple Choice Questions", desc: "Quick Selection Options" },
+                { value: "theory", label: "Theory", desc: "Written Explanation" },
+                { value: "mixed", label: "Mixed", desc: "Both Types Combined" }
+              ].map((type) => (
                 <label
-                  key={type}
-                  className="flex-1 flex items-start gap-2 p-3 border border-gray-300 rounded cursor-pointer hover:bg-gray-50"
+                  key={type.value}
+                  className={`flex items-start gap-2 p-4 border rounded cursor-pointer hover:border-orange-300 transition-colors ${
+                    questionType === type.value ? "border-orange-500 bg-orange-50" : "border-gray-300"
+                  }`}
                 >
-                  <input type="radio" name="questionType" value={type} checked={questionType === type} onChange={(e) => setQuestionType(e.target.value)} />
-                  <div className="ml-2">
-                    <p className="text-sm font-medium">{type === "mcq" ? "Multiple Choice" : type === "theory" ? "Theory" : "Mixed"}</p>
+                  <input 
+                    type="radio" 
+                    name="questionType" 
+                    value={type.value} 
+                    checked={questionType === type.value} 
+                    onChange={(e) => setQuestionType(e.target.value)}
+                    className="mt-0.5"
+                  />
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">{type.label}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{type.desc}</p>
                   </div>
                 </label>
               ))}
@@ -182,44 +196,59 @@ export default function CreateQuiz() {
           </div>
 
           <div className="space-y-3">
-            <label className="block text-gray-900 text-sm font-medium mb-2">Question Source</label>
-            <div className="border border-gray-300 rounded p-4 w-[60%] ml-4">
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input 
-                  type="radio" 
-                  name="source" 
-                  value="past" 
-                  checked={source === "past"} 
-                  onChange={(e) => setSource(e.target.value)} 
-                />
-                <Folder className="w-5 h-5 text-orange-500" />
-                <span className="text-sm font-medium">From Past Exams</span>
-              </label>
-            </div>
-            <div className="border border-gray-300 rounded p-4 w-[60%] ml-4">
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input type="radio" name="source" value="upload" checked={source === "upload"} onChange={(e) => setSource(e.target.value)} />
-                <Upload className="w-5 h-5 text-orange-500" />
-                <span className="text-sm font-medium">Upload Course Material</span>
-              </label>
-            </div>
+            <label className="block text-gray-900 text-sm font-semibold mb-3">Question Source</label>
+            <label className={`flex items-start gap-3 p-4 border rounded cursor-pointer hover:border-orange-300 transition-colors ${
+              source === "past" ? "border-orange-500 bg-orange-50" : "border-gray-300"
+            }`}>
+              <input 
+                type="radio" 
+                name="source" 
+                value="past" 
+                checked={source === "past"} 
+                onChange={(e) => setSource(e.target.value)}
+                className="mt-0.5"
+              />
+              <Folder className="w-5 h-5 text-orange-500 flex-shrink-0" />
+              <div>
+                <span className="text-sm font-semibold text-gray-900 block">From Past Exams</span>
+                <span className="text-xs text-gray-500">Generate questions from Question Bank database</span>
+              </div>
+            </label>
+            <label className={`flex items-start gap-3 p-4 border rounded cursor-pointer hover:border-orange-300 transition-colors ${
+              source === "upload" ? "border-orange-500 bg-orange-50" : "border-gray-300"
+            }`}>
+              <input 
+                type="radio" 
+                name="source" 
+                value="upload" 
+                checked={source === "upload"} 
+                onChange={(e) => setSource(e.target.value)}
+                className="mt-0.5"
+              />
+              <Upload className="w-5 h-5 text-orange-500 flex-shrink-0" />
+              <div>
+                <span className="text-sm font-semibold text-gray-900 block">Upload Course Material</span>
+                <span className="text-xs text-gray-500">AI Generate questions from your uploaded materials</span>
+              </div>
+            </label>
           </div>
 
           {source === "upload" && (
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-              <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-900 mb-1">Upload Course Material</p>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50">
+              <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+              <p className="text-sm font-semibold text-gray-900 mb-1">Upload Course Material</p>
+              <p className="text-xs text-gray-500 mb-3">PDF, DOC, DOCX, TXT files supported</p>
               <label htmlFor="fileInput" className="inline-block cursor-pointer">
                 <input id="fileInput" type="file" multiple accept=".pdf,.doc,.docx,.txt" onChange={handleFileUpload} className="hidden" />
-                <span className="bg-gray-200 text-gray-700 px-5 py-2 mt-1 rounded text-sm hover:bg-gray-300 inline-block">Choose Files</span>
+                <span className="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded text-sm hover:bg-gray-50 inline-block font-medium">Choose Files</span>
               </label>
 
               {uploadedFiles.length > 0 && (
                 <div className="mt-4 space-y-2 text-left">
                   {uploadedFiles.map((file, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded text-sm">
-                      <div className="truncate mr-4">{file.name}</div>
-                      <button type="button" onClick={() => removeFile(index)} className="text-red-500 text-xs hover:text-red-700 ml-2">Remove</button>
+                    <div key={index} className="flex items-center justify-between bg-white border border-gray-200 p-3 rounded text-sm">
+                      <div className="truncate mr-4 text-gray-700">{file.name}</div>
+                      <button type="button" onClick={() => removeFile(index)} className="text-red-500 text-xs hover:text-red-700 ml-2 font-medium">Remove</button>
                     </div>
                   ))}
                 </div>
@@ -230,21 +259,25 @@ export default function CreateQuiz() {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 rounded font-medium text-white ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-orange-500 hover:bg-orange-600"} flex items-center justify-center gap-2`}
+            className={`w-full py-3 rounded-lg font-semibold text-white transition-colors ${
+              isLoading ? "bg-gray-300 cursor-not-allowed" : "bg-gray-400 hover:bg-gray-500"
+            } flex items-center justify-center gap-2 text-sm`}
           >
             {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-            {isLoading ? "Generating Quiz..." : source === "past" ? "Start Quiz" : "Generate and Start Quiz"}
+            {isLoading ? "Generating Quiz..." : "Generate and Start Quiz"}
           </button>
+          <p className="text-xs text-center text-gray-500 -mt-3">Please fill in all required fields to continue</p>
         </form>
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full text-center">
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full text-center shadow-xl">
             {modalStep === 1 && (
               <>
-                <Loader2 className="animate-spin w-10 h-10 text-orange-500 mx-auto mb-4" />
-                <p className="text-gray-700">Generating Quiz...</p>
+                <Loader2 className="animate-spin w-12 h-12 text-orange-500 mx-auto mb-4" />
+                <p className="text-gray-700 font-medium">Generating Quiz...</p>
+                <p className="text-sm text-gray-500 mt-2">Please wait while we prepare your questions</p>
               </>
             )}
             {modalStep === 2 && (
@@ -252,15 +285,15 @@ export default function CreateQuiz() {
                 <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <BookOpen className="w-8 h-8 text-orange-500" />
                 </div>
-                <h2 className="text-xl font-bold">Mock Quiz Successfully Configured</h2>
-                <p className="text-sm text-gray-500 mb-4">Your quiz is ready to start with the selected settings.</p>
-                <div className="flex justify-center gap-4">
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Mock Quiz Successfully Configured</h2>
+                <p className="text-sm text-gray-500 mb-6">Your quiz is ready to start with the selected settings.</p>
+                <div className="flex justify-center gap-3">
                   <button
                     onClick={() => {
                       setShowModal(false);
                       navigate("/form", { state: { questions: window.generatedQuestions, timer } });
                     }}
-                    className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                    className="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium text-sm"
                   >
                     Review Selections
                   </button>
@@ -277,7 +310,7 @@ export default function CreateQuiz() {
                         },
                       });
                     }}
-                    className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+                    className="px-5 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-medium text-sm"
                   >
                     Start Quiz
                   </button>
