@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { CheckCircle, Clock, FileText, TrendingUp } from "lucide-react";
+import { updateUserStats } from "@/utils/updateUserStats";
+import { useUser } from "@/hooks/useUser";
 
 export default function ResultPage() {
   const [activeTab, setActiveTab] = useState("incorrect");
+   const { user } = useUser();
   
   // Get data from localStorage
   const savedData = JSON.parse(localStorage.getItem("quizResult") || "{}");
@@ -25,6 +28,12 @@ export default function ResultPage() {
   const incorrectCount = totalAnswered - score;
   const correctPercent = (correctCount / totalQuestions) * 100;
   const remainingPercent = ((totalQuestions - totalAnswered) / totalQuestions) * 100;
+
+  //  useEffect(() => {
+  //   if (user && percent >= 0) {
+  //     updateUserStats(user.id, percent);
+  //   }
+  // }, [user, percent]);
 
   // Circular progress
   const radius = 45;

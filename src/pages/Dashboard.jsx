@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"; // ✅ Added useNavigate
 import LaptopForm from "@/components/ui/laptopform.svg";
 import {
   NotebookPen,
@@ -30,7 +30,7 @@ function StatCard({ title, value, icon: Icon, color }) {
 
 export default function Dashboard() {
   const location = useLocation();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const loggedInUserId = location.state?.userId;
 
   const [user, setUser] = useState(null);
@@ -38,7 +38,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const id = loggedInUserId || 1;
+      const id = loggedInUserId || 3;
       const foundUser = users.find((u) => u.id === id);
       if (foundUser) {
         const mappedStats = foundUser.stats.map((stat) => ({
@@ -87,7 +87,9 @@ export default function Dashboard() {
             Create a custom quiz and get exam ready with practice questions
             tailored to you.
           </p>
-         <button
+
+          {/* ✅ Added navigation on click */}
+          <button
             onClick={() => navigate("/create-quiz")}
             className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 font-medium"
           >

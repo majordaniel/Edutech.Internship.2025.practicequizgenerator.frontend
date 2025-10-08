@@ -75,25 +75,25 @@ export const users = [
     stats: [
       {
         title: "Active Courses",
-        value: "04",
+        value: "05",
         icon: "FileText",
         color: "bg-orange-100 text-orange-500"
       },
       {
         title: "Assigned Exam",
-        value: "03",
+        value: "02",
         icon: "BookOpen",
         color: "bg-orange-100 text-orange-500"
       },
       {
         title: "Exam Taken",
-        value: "02",
+        value: "00",
         icon: "CheckCircle",
         color: "bg-orange-100 text-orange-500"
       },
       {
         title: "Average Performance",
-        value: "78",
+        value: "00",
         icon: "BarChart",
         color: "bg-orange-100 text-orange-500"
       }

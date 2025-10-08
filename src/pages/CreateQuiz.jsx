@@ -234,27 +234,62 @@ export default function CreateQuiz() {
           </div>
 
           {source === "upload" && (
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50">
-              <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
-              <p className="text-sm font-semibold text-gray-900 mb-1">Upload Course Material</p>
-              <p className="text-xs text-gray-500 mb-3">PDF, DOC, DOCX, TXT files supported</p>
-              <label htmlFor="fileInput" className="inline-block cursor-pointer">
-                <input id="fileInput" type="file" multiple accept=".pdf,.doc,.docx,.txt" onChange={handleFileUpload} className="hidden" />
-                <span className="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded text-sm hover:bg-gray-50 inline-block font-medium">Choose Files</span>
-              </label>
+  <div className="border-2 border-dashed border-orange-400 rounded-lg p-8 text-center bg-white transition-all duration-300">
+    <Upload className="w-10 h-10 text-orange-500 mx-auto mb-3" />
 
-              {uploadedFiles.length > 0 && (
-                <div className="mt-4 space-y-2 text-left">
-                  {uploadedFiles.map((file, index) => (
-                    <div key={index} className="flex items-center justify-between bg-white border border-gray-200 p-3 rounded text-sm">
-                      <div className="truncate mr-4 text-gray-700">{file.name}</div>
-                      <button type="button" onClick={() => removeFile(index)} className="text-red-500 text-xs hover:text-red-700 ml-2 font-medium">Remove</button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+    {/* If no file uploaded yet */}
+    {uploadedFiles.length === 0 && (
+      <>
+        <p className="text-sm font-semibold text-gray-900 mb-1">
+          Upload Course Material
+        </p>
+        <p className="text-xs text-gray-500 mb-3">
+          PDF, DOC, DOCX, TXT files supported
+        </p>
+        <label htmlFor="fileInput" className="inline-block cursor-pointer">
+          <input
+            id="fileInput"
+            type="file"
+            accept=".pdf,.doc,.docx,.txt"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+          <span className="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded text-sm hover:bg-gray-50 inline-block font-medium">
+            Choose a File
+          </span>
+        </label>
+      </>
+    )}
+
+    {/* When file is uploaded */}
+    {uploadedFiles.length > 0 && (
+      <>
+        <p className="text-sm font-semibold text-gray-900 mb-1">
+          {uploadedFiles[0].name.replace(/\.[^/.]+$/, "")}
+        </p>
+        <p className="text-xs text-green-600 mb-3">
+          Uploaded <span className="font-medium">{uploadedFiles[0].name}</span>
+        </p>
+
+        {/* Disabled button since file exists */}
+        <span className="bg-gray-100 border border-gray-300 text-gray-500 px-6 py-2 rounded text-sm inline-block font-medium cursor-not-allowed opacity-60">
+          Choose a File
+        </span>
+
+        <div className="mt-4">
+          <button
+            type="button"
+            onClick={() => removeFile(0)}
+            className="text-red-500 text-xs hover:text-red-700 ml-2 font-medium"
+          >
+            Remove
+          </button>
+        </div>
+      </>
+    )}
+  </div>
+)}
+
 
           <button
             type="submit"
