@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { CheckCircle, Clock, FileText, TrendingUp } from "lucide-react";
-import { updateUserStats } from "@/utils/updateUserStats";
+// import { updateUserStats } from "@/utils/updateUserStats";
 import { useUser } from "@/hooks/useUser";
 
 export default function ResultPage() {
   const [activeTab, setActiveTab] = useState("incorrect");
-   const { user } = useUser();
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const { user } = useUser();
   
   // Get data from localStorage
   const savedData = JSON.parse(localStorage.getItem("quizResult") || "{}");
-  const { questions = [], answers = {}, timer = 0 } = savedData;
+  const { questions = [], answers = {}, timer = 0, timeSpent = 0 } = savedData;
 
   if (!questions.length) {
     return <p className="text-center mt-8 text-gray-600">No quiz results available</p>;
@@ -58,11 +59,37 @@ export default function ResultPage() {
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
-    return `${hours.toString().padStart(2, '0')}hr`;
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    
+    if (hours > 0) {
+      return `${hours}hr ${minutes}min`;
+    } else if (minutes > 0) {
+      return `${minutes}min ${secs}s`;
+    } else {
+      return `${secs}s`;
+    }
+  };
+
+  const handleBackToDashboard = () => {
+    window.location.href = '/dashboard'; // or use your router navigation
+  };
+
+  const handleRetakeQuiz = () => {
+    localStorage.removeItem("quizResult");
+    window.location.href = '/create-quiz'; // or use your router navigation
+  };
+
+  const handleSaveQuiz = () => {
+    setShowSaveModal(true);
+    // Add your save logic here
+    setTimeout(() => {
+      setShowSaveModal(false);
+    }, 2000);
   };
 
   return (
-        <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header with circular progress */}
         <div className="bg-white rounded-lg shadow-sm p-8 mb-6">
@@ -96,9 +123,6 @@ export default function ResultPage() {
                   </linearGradient>
                 </defs>
               </svg>
-              {/* <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-2xl font-bold text-gray-800">{percent}%</span>
-              </div> */}
             </div>
             <p className="text-gray-600 font-medium">Your Grade: <span className="font-bold text-gray-800">{percent}%</span></p>
           </div>
@@ -125,7 +149,7 @@ export default function ResultPage() {
             <div className="bg-gray-50 rounded-lg p-4 text-center border border-gray-200">
               <Clock className="w-6 h-6 text-orange-500 mx-auto mb-2" />
               <p className="text-xs text-gray-500 mb-1">Total Time</p>
-              <p className="text-2xl font-bold text-gray-800">{formatTime(timer)}</p>
+              <p className="text-2xl font-bold text-gray-800">{formatTime(timeSpent || timer)}</p>
             </div>
           </div>
 
@@ -241,16 +265,19 @@ export default function ResultPage() {
           {/* Action Buttons */}
           <div className="flex justify-center gap-4 mt-8">
             <button 
+              onClick={handleBackToDashboard}
               className="px-6 py-2 rounded-lg border-2 border-orange-500 text-orange-500 font-medium hover:bg-orange-50"
             >
               Back Dashboard
             </button>
             <button 
+              onClick={handleSaveQuiz}
               className="px-6 py-2 rounded-lg border-2 border-orange-500 text-orange-500 font-medium hover:bg-orange-50"
             >
               Save Quiz
             </button>
             <button 
+              onClick={handleRetakeQuiz}
               className="px-6 py-2 rounded-lg bg-orange-500 text-white font-medium hover:bg-orange-600"
             >
               Retake Quiz
@@ -264,6 +291,33 @@ export default function ResultPage() {
           <p className="text-sm text-gray-600">Review the incorrect answers above and focus on those topics for your next study session</p>
         </div>
       </div>
+
+      {/* Save Success Modal */}
+      {showSaveModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-sm mx-4 text-center shadow-xl">
+            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-10 h-10 text-orange-500" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">Quiz saved Successfully</h3>
+            <p className="text-sm text-gray-600 mb-6">Your Quiz has been saved successfully</p>
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={() => setShowSaveModal(false)}
+                className="px-6 py-2 rounded-lg border-2 border-orange-500 text-orange-500 font-medium hover:bg-orange-50"
+              >
+                Back to Result page
+              </button>
+              <button
+                onClick={handleRetakeQuiz}
+                className="px-6 py-2 rounded-lg bg-orange-500 text-white font-medium hover:bg-orange-600"
+              >
+                Retake Quiz
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
