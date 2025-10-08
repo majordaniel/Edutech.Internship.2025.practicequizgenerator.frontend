@@ -9,7 +9,7 @@ import {
   BarChart,
   Award
 } from "lucide-react";
-import { users } from "@/data/mockDB";
+import { users } from "@/Data/mockDB";
 
 // StatCard
 function StatCard({ title, value, icon: Icon, color }) {
