@@ -131,7 +131,7 @@ export default function QuizScreen() {
     // Include current selection in final answers
     const updatedAnswers = selected ? { ...answers, [current]: selected } : answers;
 
-    // Save quiz result
+    // Save quiz result for history
     const quizResult = {
       name: location.state?.quizName || `Quiz ${new Date().toLocaleDateString()}`,
       subject: location.state?.subject || "General",
@@ -161,6 +161,18 @@ export default function QuizScreen() {
       { title: "Last Quiz Score", value: lastScore + "%" },
     ];
     localStorage.setItem(`${email}-stats`, JSON.stringify(updatedStats));
+
+    // *** NEW: Save data for ResultPage ***
+    const resultData = {
+      questions: questions.map(q => ({
+        question: q.question,
+        options: q.options,
+        correctOptionIndex: q.options.indexOf(q.correctAnswer)
+      })),
+      answers: updatedAnswers,
+      timer: timerValue * 60 - Math.floor(timeLeft * 60) // elapsed time in seconds
+    };
+    localStorage.setItem("quizResult", JSON.stringify(resultData));
 
     setShowConfirm(false);
     navigate("/quiz/result");

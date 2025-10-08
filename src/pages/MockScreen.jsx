@@ -1,11 +1,8 @@
-import React from "react";
-import QuizCard from "../components/QuizCard";
-import { quizzes } from "../Data/mockQuizzes";
-import { Award, BarChart2, FileText, Eye } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Award, BarChart2, FileText, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { users } from "@/data/mockDB";
-
-
+import { quizzes } from "../Data/mockQuizzes";
+import { users } from "@/Data/mockDB";
 
 // Inline StatCard component
 function StatCard({ title, value, icon: Icon, color }) {
@@ -24,7 +21,6 @@ function StatCard({ title, value, icon: Icon, color }) {
   );
 }
 
-
 // Stats data
 const stats = [
   {
@@ -35,46 +31,88 @@ const stats = [
   },
   {
     title: "Average Score",
-    value: "78%", // optionally compute from quizzes
+    value: "78%",
     icon: BarChart2,
     color: "bg-orange-100 text-orange-500",
   },
   {
     title: "Last Quiz Score",
-    value: "85%", // placeholder
+    value: "85%",
     icon: Award,
     color: "bg-orange-100 text-orange-500",
   },
   {
     title: "Average Performance",
-    value: "80%", // placeholder
+    value: "80%",
     icon: BarChart2,
     color: "bg-orange-100 text-orange-500",
   },
 ];
 
-
-
 const MockScreen = () => {
   const navigate = useNavigate();
-  const user = users[2];
-  
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [user, setUser] = useState(null);
+
+  // Get logged in user from localStorage
+  useEffect(() => {
+    const loggedInEmail = localStorage.getItem('userEmail');
+    if (loggedInEmail) {
+      const foundUser = users.find(u => u.email === loggedInEmail);
+      if (foundUser) {
+        setUser(foundUser);
+      } else {
+        // Fallback to default user if not found
+        setUser(users[2]);
+      }
+    } else {
+      // Fallback to default user if no email in localStorage
+      setUser(users[2]);
+    }
+  }, []);
+
+  const toggleDropdown = (quizId) => {
+    setOpenDropdown(openDropdown === quizId ? null : quizId);
+  };
+
+  const handleAction = (action, quizId) => {
+    console.log(`${action} for quiz ${quizId}`);
+    setOpenDropdown(null);
+    
+    // Handle different actions
+    if (action === 'view') {
+      navigate(`/quiz-result/${quizId}`);
+    } else if (action === 'retake') {
+      navigate(`/quiz/${quizId}`);
+    } else if (action === 'share') {
+      // Handle share logic
+      console.log('Share quiz result');
+    } else if (action === 'delete') {
+      // Handle delete logic
+      console.log('Delete quiz result');
+    }
+  };
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="space-y-6 mt-6"> {/* Remove min-h-screen bg-gray-50 px-6 */}
-      {/* Remove the max-w-7xl wrapper - Layout handles this now */}
-      
+    <div className="space-y-6 mt-6">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
         <div>
-          <span className="text-orange-500 font-medium">Welcome Back, </span>
-          <span className="text-gray-700 font-medium">{user.name}</span>
+          <div>
+            <span className="text-orange-500 font-medium">Welcome Back, </span>
+            <span className="text-gray-700 font-medium">{user.name}</span>
+          </div>
           <div className="text-xs text-gray-500 mt-1">
             ST-ID-MAT-0098-23402025
           </div>
         </div>
         <div
           onClick={() => navigate("/create-quiz")}
-          className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition text-sm font-medium cursor-pointer"
+          className="mt-4 md:mt-0 bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition text-sm font-medium cursor-pointer"
         >
           Create New Quiz
         </div>
@@ -87,61 +125,120 @@ const MockScreen = () => {
         ))}
       </div>
 
-      {/* Rest of content... */}
+      {/* Recent Quizzes Section */}
+      <div>
+        {/* Header */}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Recent Quizzes
+          </h2>
+          <a 
+            href="#" 
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/all-quizzes');
+            }}
+            className="text-gray-500 hover:text-gray-700 text-sm font-medium"
+          >
+            View all
+          </a>
+        </div>
 
-      
-    <div className="flex justify-between items-center mb-6">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Recent Quizzes
-            </h2>
-            <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-              View all
-            </a>
-          </div>
-        {/* Recent Quizzes Section */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-  {/* <div className="p-6 border-b border-gray-100">
-    <div className="flex justify-between items-center">
-      <h2 className="text-lg font-semibold text-gray-900">Recent Quizzes</h2>
-      <a href="#" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-        View all
-      </a>
-    </div>
-  </div> */}
-
-  <div className="divide-y divide-gray-100">
-    {quizzes.map((quiz) => (
-      <div
-        key={quiz.id}
-        className="flex justify-between items-center p-6 hover:bg-gray-50 transition"
-      >
-                  <div className="mb-2 md:mb-0 flex-1">
-                    <h3 className="font-medium text-gray-900 mb-1">{quiz.title}</h3>
-                    <p className="text-gray-500 text-sm">
-                      {quiz.subject} • {quiz.questions} Questions • {quiz.duration} • {quiz.status}
-                    </p>
+        {/* Quiz Cards */}
+        <div className="space-y-3">
+          {quizzes.map((quiz) => (
+            <div
+              key={quiz.id}
+              className="bg-white rounded-lg p-5 hover:bg-gray-50 transition border border-gray-100"
+            >
+              <div className="flex items-center justify-between gap-4">
+                {/* Left Section - Quiz Info */}
+                <div className="flex-1 min-w-0">
+                  {/* Top Metadata */}
+                  <div className="text-xs text-gray-500 mb-1">
+                    {quiz.questions} Questions | {quiz.duration} minutes | {quiz.status}
                   </div>
-                  <div className="flex items-center space-x-6">
-                    <div className="text-right">
-                      <p className="text-green-600 font-semibold text-sm">{quiz.score}</p>
-                      <p className="text-gray-500 text-xs">{quiz.date}</p>
-                    </div>
-                    <div className="bg-orange-500 text-white px-3 py-2 rounded-lg flex items-center hover:bg-orange-600 transition text-sm font-medium cursor-pointer">
-                      <Eye className="w-4 h-4 mr-2" /> View Result
-                    </div>
-                  </div>
+                  
+                  {/* Quiz Title & Subject */}
+                  <h3 className="text-base font-semibold text-gray-900 mb-0.5 truncate">
+                    {quiz.title}
+                  </h3>
+                  <p className="text-sm text-gray-500">{quiz.subject}</p>
                 </div>
-            ))}
+
+                {/* Center Section - Performance */}
+                <div className="text-center flex-shrink-0">
+                  <p className="text-base font-semibold text-gray-900">
+                    {quiz.score}%Correct
+                  </p>
+                </div>
+
+                {/* Date Section */}
+                <div className="text-center flex-shrink-0 min-w-20">
+                  <p className="text-sm text-gray-500">
+                    {new Date(quiz.date).toLocaleDateString('en-GB', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric'
+                    })}
+                  </p>
+                </div>
+
+                {/* Action Button with Dropdown */}
+                <div className="relative flex-shrink-0">
+                  <button 
+                    onClick={() => toggleDropdown(quiz.id)}
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md font-medium text-sm shadow-sm transition flex items-center gap-2"
+                  >
+                    View Result
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {openDropdown === quiz.id && (
+                    <>
+                      {/* Backdrop to close dropdown when clicking outside */}
+                      <div 
+                        className="fixed inset-0 z-10" 
+                        onClick={() => setOpenDropdown(null)}
+                      />
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20">
+                        <button
+                          onClick={() => handleAction('view', quiz.id)}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
+                        >
+                          View Result
+                        </button>
+                        <button
+                          onClick={() => handleAction('retake', quiz.id)}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
+                        >
+                          Retake Quiz
+                        </button>
+                        <button
+                          onClick={() => handleAction('share', quiz.id)}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
+                        >
+                          Share Result
+                        </button>
+                        <hr className="my-1 border-gray-200" />
+                        <button
+                          onClick={() => handleAction('delete', quiz.id)}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
+                        >
+                          Delete Result
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
-             {/* : (
-            <div className="text-center text-gray-500 py-12">
-              No quizzes available yet. Start one to see it here.
-            </div>
-          ) */}
+          ))}
         </div>
       </div>
+    </div>
   );
 };
-
 
 export default MockScreen;
