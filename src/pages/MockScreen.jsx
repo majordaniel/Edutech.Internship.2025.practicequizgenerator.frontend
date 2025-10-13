@@ -3,6 +3,7 @@ import { Award, BarChart2, FileText, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { quizzes } from "../Data/mockQuizzes";
 import { users } from "@/Data/mockDB";
+import { useUser } from "@/hooks/useUser";
 
 // Inline StatCard component
 function StatCard({ title, value, icon: Icon, color }) {
@@ -52,49 +53,66 @@ const stats = [
 const MockScreen = () => {
   const navigate = useNavigate();
   const [openDropdown, setOpenDropdown] = useState(null);
+  const { user: loggedInUser } = useUser();
   const [user, setUser] = useState(null);
 
-  // Get logged in user from localStorage
+  // Get logged in user from localStorage or useUser hook
   useEffect(() => {
-    const loggedInEmail = localStorage.getItem('userEmail');
-    if (loggedInEmail) {
-      const foundUser = users.find(u => u.email === loggedInEmail);
-      if (foundUser) {
-        setUser(foundUser);
+    if (loggedInUser) {
+      setUser(loggedInUser);
+    } else {
+      // Try alternative methods to get user
+      const loggedInEmail = localStorage.getItem('loggedInUserEmail');
+      const userData = localStorage.getItem('userData');
+      
+      if (userData) {
+        try {
+          setUser(JSON.parse(userData));
+        } catch (err) {
+          console.error("Failed to parse userData:", err);
+        }
+      } else if (loggedInEmail) {
+        const foundUser = users.find(u => u.email === loggedInEmail);
+        if (foundUser) {
+          setUser(foundUser);
+        } else {
+          // Fallback to default user if not found
+          setUser(users[2]);
+        }
       } else {
-        // Fallback to default user if not found
+        // Fallback to default user if no email in localStorage
         setUser(users[2]);
       }
-    } else {
-      // Fallback to default user if no email in localStorage
-      setUser(users[2]);
     }
-  }, []);
+  }, [loggedInUser]);
 
   const toggleDropdown = (quizId) => {
     setOpenDropdown(openDropdown === quizId ? null : quizId);
   };
 
   const handleAction = (action, quizId) => {
-    console.log(`${action} for quiz ${quizId}`);
-    setOpenDropdown(null);
-    
-    // Handle different actions
-    if (action === 'view') {
-      navigate(`/quiz-result/${quizId}`);
-    } else if (action === 'retake') {
-      navigate(`/quiz/${quizId}`);
-    } else if (action === 'share') {
-      // Handle share logic
-      console.log('Share quiz result');
-    } else if (action === 'delete') {
-      // Handle delete logic
-      console.log('Delete quiz result');
-    }
-  };
+  console.log(`${action} for quiz ${quizId}`);
+  setOpenDropdown(null);
+  
+  if (action === "view") {
+    navigate(`/quiz-result/${quizId}`);
+  } else if (action === "retake") {
+    navigate(`/quiz/${quizId}`);
+  } else if (action === "share") {
+    // Navigate to Analytics screen, passing quizId as state
+    navigate(`/analytics`, { state: { quizId } });
+  } else if (action === "delete") {
+    console.log("Delete quiz result");
+  }
+};
+
 
   if (!user) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    );
   }
 
   return (
@@ -107,7 +125,7 @@ const MockScreen = () => {
             <span className="text-gray-700 font-medium">{user.name}</span>
           </div>
           <div className="text-xs text-gray-500 mt-1">
-            ST-ID-MAT-0098-23402025
+            {user.studentId || "ST-ID-MAT-0098-23402025"}
           </div>
         </div>
         <div
@@ -169,7 +187,7 @@ const MockScreen = () => {
                 {/* Center Section - Performance */}
                 <div className="text-center flex-shrink-0">
                   <p className="text-base font-semibold text-gray-900">
-                    {quiz.score}%Correct
+                    {quiz.score}% Correct
                   </p>
                 </div>
 
@@ -219,7 +237,7 @@ const MockScreen = () => {
                           onClick={() => handleAction('share', quiz.id)}
                           className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
                         >
-                          Share Result
+                          Analytics
                         </button>
                         <hr className="my-1 border-gray-200" />
                         <button

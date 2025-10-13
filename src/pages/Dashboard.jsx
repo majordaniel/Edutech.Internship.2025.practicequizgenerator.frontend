@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // ✅ Added useNavigate
+import { useLocation, useNavigate } from "react-router-dom";
 import LaptopForm from "@/components/ui/laptopform.svg";
 import {
   NotebookPen,
@@ -7,7 +7,6 @@ import {
   FileText,
   CheckCircle,
   BarChart,
-  Award
 } from "lucide-react";
 import { users } from "@/Data/mockDB";
 
@@ -30,34 +29,77 @@ function StatCard({ title, value, icon: Icon, color }) {
 
 export default function Dashboard() {
   const location = useLocation();
-  const navigate = useNavigate(); 
-  const loggedInUserId = location.state?.userId;
+  const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
-  const [userStats, setUserStats] = useState([]);
+
+  // ✅ Static stats
+  const staticStats = [
+    {
+      title: "Active Courses",
+      value: "05",
+      icon: FileText,
+      color: "bg-orange-100 text-orange-500",
+    },
+    {
+      title: "Assigned Exam",
+      value: "02",
+      icon: BookOpen,
+      color: "bg-orange-100 text-orange-500",
+    },
+    {
+      title: "Exam Taken",
+      value: "00",
+      icon: CheckCircle,
+      color: "bg-orange-100 text-orange-500",
+    },
+    {
+      title: "Average Performance",
+      value: "00",
+      icon: BarChart,
+      color: "bg-orange-100 text-orange-500",
+    },
+  ];
 
   useEffect(() => {
     const fetchUser = async () => {
-      const id = loggedInUserId || 3;
-      const foundUser = users.find((u) => u.id === id);
-      if (foundUser) {
-        const mappedStats = foundUser.stats.map((stat) => ({
-          ...stat,
-          icon:
-            stat.icon === "BookOpen"
-              ? BookOpen
-              : stat.icon === "FileText"
-              ? FileText
-              : stat.icon === "CheckCircle"
-              ? CheckCircle
-              : BarChart,
-        }));
-        setUser({ name: foundUser.name, studentId: foundUser.studentId });
-        setUserStats(mappedStats);
+      let userId = location.state?.userId;
+
+      if (!userId) {
+        const storedUserId = localStorage.getItem("loggedInUserId");
+        userId = storedUserId ? parseInt(storedUserId) : null;
+      }
+
+      const storedUserData = localStorage.getItem("userData");
+      if (storedUserData) {
+        try {
+          const userData = JSON.parse(storedUserData);
+
+          // ✅ Extract only first name
+          const firstName = userData.name?.split(" ")[0] || userData.name;
+
+          setUser({ name: firstName, studentId: userData.studentId });
+          return;
+        } catch (error) {
+          console.error("Error parsing stored user data:", error);
+        }
+      }
+
+      if (userId) {
+        const foundUser = users.find((u) => u.id === userId);
+        if (foundUser) {
+          const firstName = foundUser.name?.split(" ")[0] || foundUser.name;
+
+          setUser({ name: firstName, studentId: foundUser.studentId });
+          localStorage.setItem("userData", JSON.stringify(foundUser));
+        }
+      } else {
+        navigate("/login");
       }
     };
+
     fetchUser();
-  }, [loggedInUserId]);
+  }, [location.state?.userId, navigate]);
 
   if (!user) {
     return (
@@ -69,7 +111,7 @@ export default function Dashboard() {
 
   return (
     <div className="w-full h-full mt-4 flex flex-col space-y-6">
-      {/* Welcome */}
+      {/* Welcome section */}
       <div>
         <span className="text-orange-500 font-medium">Welcome Back, </span>
         <span className="text-gray-700 font-medium">{user.name}</span>
@@ -88,7 +130,6 @@ export default function Dashboard() {
             tailored to you.
           </p>
 
-          {/* ✅ Added navigation on click */}
           <button
             onClick={() => navigate("/create-quiz")}
             className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 font-medium"
@@ -105,9 +146,9 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Stats */}
+      {/* ✅ Static Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-        {userStats.map((stat, i) => (
+        {staticStats.map((stat, i) => (
           <StatCard key={i} {...stat} />
         ))}
       </div>
@@ -115,9 +156,7 @@ export default function Dashboard() {
       {/* Activity */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 w-full flex flex-col">
         <div className="p-6 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Your Activity
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-900">Your Activity</h2>
         </div>
         <div className="p-6 md:p-12 text-center flex flex-col items-center">
           <div className="mb-6 md:mb-8">

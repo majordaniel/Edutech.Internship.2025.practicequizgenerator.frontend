@@ -1,4 +1,4 @@
-// src/data/mockDB.js
+// src/Data/mockDB.js
 export const users = [
   { 
     id: 1, 

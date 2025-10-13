@@ -4,8 +4,10 @@ import Dashboard from "./pages/Dashboard";
 import MockScreen from "./pages/MockScreen";
 import CreateQuiz from "./pages/CreateQuiz";
 // import FormScreen from "./pages/quizscreen/FormScreen";
-import QuizScreen from "./pages/quizscreen/QuizScreen";       // updated path
-import ResultPage from "./pages/quizscreen/ResultPage";       // added
+import QuizScreen from "./pages/quizscreen/QuizScreen";       
+import ResultPage from "./pages/quizscreen/ResultPage";       
+import Analytics from "./pages/Analytics"; 
+import AnalyticsDetail from "./pages/AnalyticsDetail";
 import Layout from "./components/layout/Layouts";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -31,7 +33,9 @@ export default function App() {
         <Route path="/create-quiz" element={<CreateQuiz />} />
         {/* <Route path="/form" element={<FormScreen />} /> */}
         <Route path="/quiz" element={<QuizScreen />} />
-        <Route path="/quiz/result" element={<ResultPage />} />   {/* new */}
+        <Route path="/quiz/result" element={<ResultPage />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/analytics-details" element={<AnalyticsDetail />} />
       </Route>
 
       {/* Catch-all fallback */}
