@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/auth/login";
 import Dashboard from "./pages/Dashboard";
 import MockScreen from "./pages/MockScreen";
+import AllQuizzes from "./pages/AllQuizzes"; // adjust path as needed
 import CreateQuiz from "./pages/CreateQuiz";
 // import FormScreen from "./pages/quizscreen/FormScreen";
 import QuizScreen from "./pages/quizscreen/QuizScreen";       
@@ -30,6 +31,7 @@ export default function App() {
       >
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/mock" element={<MockScreen />} />
+        <Route path="/all-quizzes" element={<AllQuizzes />} />
         <Route path="/create-quiz" element={<CreateQuiz />} />
         {/* <Route path="/form" element={<FormScreen />} /> */}
         <Route path="/quiz" element={<QuizScreen />} />

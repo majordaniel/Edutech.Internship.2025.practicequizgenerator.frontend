@@ -83,8 +83,11 @@ export default function Analytics() {
             Detailed analysis for Computer Science quiz
           </p>
         </div>
-        <Button onClick={() => navigate("/create-quiz")}>Create New Quiz</Button>
-      </div>
+        <button
+          onClick={() => navigate(-1)}
+          className="px-4 py-2 rounded-lg border text-sm text-gray-700 hover:bg-gray-100 transition"
+        >Back</button>      
+        </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

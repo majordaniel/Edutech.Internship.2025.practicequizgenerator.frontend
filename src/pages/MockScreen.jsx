@@ -164,7 +164,8 @@ const MockScreen = () => {
 
         {/* Quiz Cards */}
         <div className="space-y-3">
-          {quizzes.map((quiz) => (
+          {quizzes.slice(0, 4).map((quiz) => (
+
             <div
               key={quiz.id}
               className="bg-white rounded-lg p-5 hover:bg-gray-50 transition border border-gray-100"
@@ -185,10 +186,10 @@ const MockScreen = () => {
                 </div>
 
                 {/* Center Section - Performance */}
-                <div className="text-center flex-shrink-0">
-                  <p className="text-base font-semibold text-gray-900">
-                    {quiz.score}% Correct
-                  </p>
+               <div className="flex-1 text-center flex-shrink-0">
+                <p className="text-base font-semibold text-gray-900">
+                        {quiz.score}%
+                </p>
                 </div>
 
                 {/* Date Section */}
@@ -208,7 +209,7 @@ const MockScreen = () => {
                     onClick={() => toggleDropdown(quiz.id)}
                     className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md font-medium text-sm shadow-sm transition flex items-center gap-2"
                   >
-                    View Result
+                    View More
                     <ChevronDown className="w-4 h-4" />
                   </button>
 
