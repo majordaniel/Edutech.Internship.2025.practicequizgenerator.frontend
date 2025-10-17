@@ -32,7 +32,7 @@ const stats = [
   },
   {
     title: "Average Score",
-    value: "78%",
+    value: "80%",
     icon: BarChart2,
     color: "bg-orange-100 text-orange-500",
   },
@@ -43,8 +43,8 @@ const stats = [
     color: "bg-orange-100 text-orange-500",
   },
   {
-    title: "Average Performance",
-    value: "80%",
+    title: "Average Time spent",
+    value: "1hr 45mins",
     icon: BarChart2,
     color: "bg-orange-100 text-orange-500",
   },
