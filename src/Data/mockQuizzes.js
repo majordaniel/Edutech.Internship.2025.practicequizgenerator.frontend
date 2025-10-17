@@ -22,7 +22,7 @@ export const quizzes = [
   {
     id: 3,
     title: "HTML & CSS Basics",
-    subject: "Web Development",
+    subject: "Computer Science",
     questions: 25,
     duration: 40,
     status: "Completed",
@@ -32,7 +32,7 @@ export const quizzes = [
   {
     id: 4,
     title: "React JS Intro Quiz",
-    subject: "Web Development",
+    subject: "Computer Science",
     questions: 10,
     duration: 15,
     status: "Completed",
@@ -42,7 +42,7 @@ export const quizzes = [
   {
     id: 5,
     title: "Python Data Types & Loops",
-    subject: "Programming",
+    subject: "Computer science",
     questions: 18,
     duration: 25,
     status: "Completed",
@@ -52,7 +52,7 @@ export const quizzes = [
   {
     id: 6,
     title: "Database Management Basics",
-    subject: "Database Systems",
+    subject: "computer science",
     questions: 22,
     duration: 30,
     status: "Completed",
@@ -62,7 +62,7 @@ export const quizzes = [
   {
     id: 7,
     title: "Cybersecurity Awareness",
-    subject: "Information Security",
+    subject: "computer science",
     questions: 16,
     duration: 20,
     status: "Completed",
@@ -82,7 +82,7 @@ export const quizzes = [
   {
     id: 9,
     title: "Networking Essentials Quiz",
-    subject: "Networking",
+    subject: "computer science",
     questions: 12,
     duration: 20,
     status: "Completed",
@@ -92,7 +92,7 @@ export const quizzes = [
   {
     id: 10,
     title: "AI and Machine Learning Concepts",
-    subject: "Artificial Intelligence",
+    subject: "computer science",
     questions: 25,
     duration: 40,
     status: "Completed",
@@ -112,7 +112,7 @@ export const quizzes = [
   {
     id: 12,
     title: "Version Control with Git & GitHub",
-    subject: "Software Tools",
+    subject: "computer science",
     questions: 10,
     duration: 15,
     status: "Completed",

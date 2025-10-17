@@ -96,8 +96,17 @@ export default function CreateQuiz() {
       return;
     }
 
+    // NEW: If source is "past", navigate directly to quiz with settings
     if (source === "past") {
-      navigate("/quiz", { state: { mode: "past-exams" } });
+      navigate("/quiz", { 
+        state: { 
+          mode: "past-exams",
+          numQuestions: numQuestions,  // Pass the number of questions
+          timer: timer,                 // Pass the timer value
+          quizName: course || "Quiz",
+          subject: course || "General"
+        } 
+      });
       return;
     }
 
@@ -184,12 +193,12 @@ export default function CreateQuiz() {
           <h1 className="text-2xl font-bold text-gray-900 mb-3">
             Set up Mock Exam
           </h1>
-          <div className="inline-flex items-center gap-2">
-            <span className="text-gray-900 text-sm font-semibold">Program</span>
-            <span className="text-gray-700 text-sm font-medium">
+          <div className="inline-flex items-center gap-2 bg-orange-500 border-2 border-orange-500 rounded-full px-4 py-0.3 mr-3">
+            <span className="text-white text-sm font-semibold">Program</span>
+          </div>
+            <span className="text-sm font-medium">
               Computer Science
             </span>
-          </div>
         </div>
 
         <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm p-8">
@@ -216,6 +225,8 @@ export default function CreateQuiz() {
                   Data Structures and Algorithms
                 </option>
                 <option value="course3">Web Development Fundamentals</option>
+                <option value="course4">Database Management Systems</option>
+                <option value="course5">Operating Systems</option>
               </select>
             </div>
 
