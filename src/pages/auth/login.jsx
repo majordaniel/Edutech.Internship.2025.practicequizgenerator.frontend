@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { authAPI, userAPI } from "../../utils/apiClient";
 import bgAuth from "../../assets/auth-bg.png";
 import ExamLogo from "../../assets/ExamLogo.svg";
 import { users } from "@/Data/mockDB";
@@ -61,17 +61,9 @@ export default function Login() {
   // Fetch user profile by email
   const fetchUserProfileByEmail = async (email, token) => {
     try {
-      const encodedEmail = encodeURIComponent(email);
-      const fullUrl = `http://apppracticequiz.runasp.net/api/User/email?email=${encodedEmail}`;
-
       console.log("Fetching profile by email:", email);
 
-      const profileResponse = await axios.get(fullUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        timeout: 5000,
-      });
+      const profileResponse = await userAPI.getByEmail(email);
 
       console.log("Email Profile Response:", profileResponse.data);
 
@@ -88,16 +80,9 @@ export default function Login() {
   // Fetch user profile by ID
   const fetchUserProfileById = async (userId, token) => {
     try {
-      const fullUrl = `http://apppracticequiz.runasp.net/api/User/id?id=${userId}`;
-
       console.log("Fetching profile by ID:", userId);
 
-      const profileResponse = await axios.get(fullUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        timeout: 5000,
-      });
+      const profileResponse = await userAPI.getById(userId);
 
       console.log("ID Profile Response:", profileResponse.data);
 
@@ -124,11 +109,7 @@ export default function Login() {
 
     try {
       // Try API authentication first
-      const response = await axios.post(
-        "http://apppracticequiz.runasp.net/api/Auth/login",
-        loginPayload,
-        { timeout: 5000 }
-      );
+      const response = await authAPI.login(loginPayload);
 
       console.log("API Response:", response.data);
 
