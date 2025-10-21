@@ -9,7 +9,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { quizAPI } from "../utils/apiClient";
 
 function Stepper({ label, min = 1, max = 100, value, onChange }) {
   const updateValue = (newVal) => {
@@ -128,20 +128,12 @@ export default function CreateQuiz() {
         formData.append("QuestionType", questionType);
         formData.append("NumberOfQuestions", Number(numQuestions));
 
-        response = await axios.post(
-          "http://apppracticequiz.runasp.net/api/Quiz/generatefromfile",
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
+        response = await quizAPI.generateFromFile(formData);
       } else {
-        response = await axios.post(
-          "http://apppracticequiz.runasp.net/api/Quiz/generatefromfile",
-          {
-            QuestionType: questionType,
-            NumberOfQuestions: Number(numQuestions),
-          },
-          { headers: { "Content-Type": "application/json" } }
-        );
+        response = await quizAPI.generateFromFile({
+          QuestionType: questionType,
+          NumberOfQuestions: Number(numQuestions)
+        });
       }
 
       if (!response.data?.succeeded)
