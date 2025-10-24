@@ -13,5 +13,9 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     }
+  },
+  define: {
+    // Set production API URL
+    'import.meta.env.VITE_API_BASE_URL': JSON.stringify(process.env.NODE_ENV === 'production' ? 'https://edutechquizapp.duckdns.org' : 'http://localhost:8080')
   }
 })
