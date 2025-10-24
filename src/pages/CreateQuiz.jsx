@@ -182,7 +182,7 @@ export default function CreateQuiz() {
         }`}
       >
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-3">
+          <h1 className="text-5xl font-bold text-gray-900 mb-3">
             Set up Mock Exam
           </h1>
           <div className="inline-flex items-center gap-2 bg-orange-500 border-2 border-orange-500 rounded-full px-4 py-0.3 mr-3">
