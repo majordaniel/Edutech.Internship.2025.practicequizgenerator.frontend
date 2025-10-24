@@ -14,13 +14,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     }
   },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://apppracticequiz.runasp.net',
-        changeOrigin: true,
-        secure: false,
-      },
-    },
-  },
+  define: {
+    // Set production API URL
+    'import.meta.env.VITE_API_BASE_URL': JSON.stringify(process.env.NODE_ENV === 'production' ? 'https://edutechquizapp.duckdns.org' : 'http://localhost:8080')
+  }
 })
