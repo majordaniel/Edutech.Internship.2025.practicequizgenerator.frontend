@@ -131,7 +131,7 @@ export default function Dashboard() {
           </p>
 
           <button
-            onClick={() => navigate("/create-quiz")}
+            onClick={() => navigate("/mock")}
             className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 font-medium"
           >
             Take a Practice Quiz Now

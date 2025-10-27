@@ -72,12 +72,12 @@ export default function ResultPage() {
   };
 
   const handleBackToDashboard = () => {
-    window.location.href = '/dashboard'; // or use your router navigation
+    window.location.href = '/dashboard';
   };
 
   const handleRetakeQuiz = () => {
     localStorage.removeItem("quizResult");
-    window.location.href = '/create-quiz'; // or use your router navigation
+    window.location.href = '/create-quiz';
   };
 
   const handleSaveQuiz = () => {
@@ -85,7 +85,7 @@ export default function ResultPage() {
     // Add your save logic here
     setTimeout(() => {
       setShowSaveModal(false);
-    }, 2000);
+    }, 5000);
   };
 
   return (
@@ -266,19 +266,19 @@ export default function ResultPage() {
           <div className="flex justify-center gap-4 mt-8">
             <button 
               onClick={handleBackToDashboard}
-              className="px-6 py-2 rounded-lg border-2 border-orange-500 text-orange-500 font-medium hover:bg-orange-50"
+              className="px-6 py-2 rounded-lg border-2 border-orange-500 text-orange-500 font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 hover:border-gray-400 hover:text-gray-600"
             >
               Back Dashboard
             </button>
             <button 
               onClick={handleSaveQuiz}
-              className="px-6 py-2 rounded-lg border-2 border-orange-500 text-orange-500 font-medium hover:bg-orange-50"
+              className="px-6 py-2 rounded-lg border-2 border-orange-500 text-orange-500 font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 hover:border-gray-400 hover:text-gray-600"
             >
               Save Quiz
             </button>
             <button 
               onClick={handleRetakeQuiz}
-              className="px-6 py-2 rounded-lg bg-orange-500 text-white font-medium hover:bg-orange-600"
+              className="px-6 py-2 rounded-lg bg-orange-500 text-white font-medium hover:bg-orange-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
             >
               Retake Quiz
             </button>
@@ -294,30 +294,42 @@ export default function ResultPage() {
 
       {/* Save Success Modal */}
       {showSaveModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-sm mx-4 text-center shadow-xl">
-            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-10 h-10 text-orange-500" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">Quiz saved Successfully</h3>
-            <p className="text-sm text-gray-600 mb-6">Your Quiz has been saved successfully</p>
-            <div className="flex gap-3 justify-center">
-              <button
-                onClick={() => setShowSaveModal(false)}
-                className="px-6 py-2 rounded-lg border-2 border-orange-500 text-orange-500 font-medium hover:bg-orange-50"
-              >
-                Back to Result page
-              </button>
-              <button
-                onClick={handleRetakeQuiz}
-                className="px-6 py-2 rounded-lg bg-orange-500 text-white font-medium hover:bg-orange-600"
-              >
-                Retake Quiz
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+  <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50">
+    {/* Modal Container */}
+    <div className="bg-white rounded-xl p-8 max-w-sm mx-4 text-center shadow-2xl transform transition-all duration-300 scale-100 hover:scale-[1.02]">
+      
+      {/* Icon */}
+      <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+        <CheckCircle className="w-9 h-9 text-orange-500" /> 
+      </div>
+      
+      {/* Text */}
+      <h3 className="text-xl font-bold text-gray-800 mb-3">
+        Quiz Saved Successfully
+      </h3>
+      <p className="text-sm text-gray-600 mb-8">
+        Your quiz has been saved successfully.
+      </p>
+      
+      {/* Action Buttons */}
+      <div className="flex gap-4 justify-center">
+        <button
+          onClick={() => setShowSaveModal(false)}
+          className="px-5 py-2.5 flex-1 rounded-lg border-2 border-orange-500 text-orange-500 text-sm font-medium hover:bg-orange-500 hover:text-white transition-all duration-300 transform hover:scale-105"
+        >
+          Back to Result page
+        </button>
+        
+        <button
+          onClick={handleRetakeQuiz}
+          className="px-5 py-2.5 flex-1 rounded-lg bg-orange-500 text-white text-sm font-medium hover:bg-orange-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+        >
+          Retake Quiz
+        </button>
+      </div>
     </div>
-  );
+  </div>
+)}  
+</div>
+  )
 }

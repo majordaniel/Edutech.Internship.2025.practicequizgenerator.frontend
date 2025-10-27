@@ -61,13 +61,13 @@ export default function Analytics() {
 
   // Mock chart data
   const data = [
-    { name: "Test 1", score: 40 },
-    { name: "Test 2", score: 80 },
-    { name: "Test 3", score: 60 },
-    { name: "Test 4", score: 90 },
-    { name: "Test 5", score: 75 },
-    { name: "Test 6", score: 50 },
-    { name: "Test 7", score: 95 },
+    { name: "Data science", score: 40 },
+    { name: "Machine Learning", score: 80 },
+    { name: "Web development", score: 60 },
+    { name: "Database design", score: 90 },
+    // { name: "Test 5", score: 75 },
+    // { name: "Test 6", score: 50 },
+    // { name: "Test 7", score: 95 },
   ];
 
   return (
@@ -83,8 +83,11 @@ export default function Analytics() {
             Detailed analysis for Computer Science quiz
           </p>
         </div>
-        <Button onClick={() => navigate("/create-quiz")}>Create New Quiz</Button>
-      </div>
+        <button
+          onClick={() => navigate(-1)}
+          className="px-4 py-2 rounded-lg border text-sm text-gray-700 hover:bg-gray-100 transition"
+        >Back</button>      
+        </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -96,7 +99,7 @@ export default function Analytics() {
         />
         <StatCard
           title="Total Average Score"
-          value="78%"
+          value="80%"
           icon={TrendingUp}
           color="text-orange-500"
         />
@@ -167,9 +170,14 @@ export default function Analytics() {
         <h2 className="font-semibold text-gray-700 text-sm sm:text-base">
           Detailed Attempt History
         </h2>
-        {[4, 3, 2, 1].map((num) => (
+        {[
+          { id: 4, course: "Data Science", score: 40, subject: "Computer Science" },
+          { id: 3, course: "Machine Learning", score: 80, subject: "Computer Science" },
+          { id: 2, course: "Web Development", score: 90, subject: "Computer Science" },
+          { id: 1, course: "Database Design", score: 60, subject: "Computer Science" }
+        ].map(({ id, course, score, subject }) => (
           <Card
-            key={num}
+            key={id}
             className="flex justify-between items-center p-4 hover:bg-gray-50 transition"
           >
             <div>
@@ -177,12 +185,12 @@ export default function Analytics() {
                 20 Questions | 30 minutes | Quiz Completed | 14/09/2025
               </p>
               <h3 className="font-semibold text-gray-700 text-sm">
-                0{num} Data Science
+                0{id} {course}
               </h3>
-              <p className="text-xs text-gray-500">Computer Science</p>
+              <p className="text-xs text-gray-500">{subject}</p>
             </div>
             <div className="flex items-center gap-4">
-              <p className="font-bold text-gray-700">85%</p>
+              <p className="font-bold text-gray-700">{score}%</p>
               <Button onClick={() => navigate("/analytics-details")}>Analytics</Button>
             </div>
           </Card>

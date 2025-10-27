@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -5,8 +6,8 @@ export default function QuizScreen() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Mock questions for "Past Exams"
-  const mockQuestions = [
+  // Extended mock questions pool (15 questions total)
+  const allMockQuestions = [
     {
       question: "What is the capital of Nigeria?",
       options: ["Abuja", "Lagos", "Port Harcourt", "Kano"],
@@ -62,10 +63,48 @@ export default function QuizScreen() {
       options: ["Mars", "Venus", "Jupiter", "Mercury"],
       correctAnswer: "Mars",
     },
+    {
+      question: "What is the time complexity of binary search?",
+      options: ["O(n)", "O(log n)", "O(n²)", "O(1)"],
+      correctAnswer: "O(log n)",
+    },
+    {
+      question: "Which programming language is known as the mother of all languages?",
+      options: ["C", "Assembly", "COBOL", "FORTRAN"],
+      correctAnswer: "C",
+    },
+    {
+      question: "What does HTTP stand for?",
+      options: [
+        "HyperText Transfer Protocol",
+        "High Transfer Text Protocol",
+        "HyperText Transmission Protocol",
+        "Home Tool Transfer Protocol",
+      ],
+      correctAnswer: "HyperText Transfer Protocol",
+    },
+    {
+      question: "Which of the following is a NoSQL database?",
+      options: ["MySQL", "PostgreSQL", "MongoDB", "Oracle"],
+      correctAnswer: "MongoDB",
+    },
+    {
+      question: "What is the default port for HTTPS?",
+      options: ["80", "443", "8080", "3000"],
+      correctAnswer: "443",
+    },
   ];
 
   // Check mode from location.state
   const mode = location.state?.mode;
+  
+  // NEW: Get the requested number of questions from location.state
+  const requestedNumQuestions = location.state?.numQuestions || 10;
+
+  // NEW: Use only the requested number of mock questions if mode is "past-exams"
+  const mockQuestions = mode === "past-exams" 
+    ? allMockQuestions.slice(0, requestedNumQuestions)
+    : allMockQuestions;
 
   // Use mock questions if mode is "past-exams", otherwise use generated questions
   const questions =
@@ -162,7 +201,7 @@ export default function QuizScreen() {
     ];
     localStorage.setItem(`${email}-stats`, JSON.stringify(updatedStats));
 
-    // *** NEW: Save data for ResultPage ***
+    // Save data for ResultPage
     const resultData = {
       questions: questions.map(q => ({
         question: q.question,
@@ -283,7 +322,7 @@ export default function QuizScreen() {
 
       {/* Confirm Submit Popup */}
       {showConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur z-50 flex items-center justify-center px-4">
           <div className="bg-white p-6 rounded-2xl shadow-xl w-80 text-center space-y-4">
             <div className="flex justify-center">
               <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center">

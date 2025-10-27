@@ -1,13 +1,21 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { authAPI, userAPI } from "../../utils/apiClient";
+import { authAPI, userAPI } from "../../utils/apiClient.js";
 import bgAuth from "../../assets/auth-bg.png";
 import ExamLogo from "../../assets/ExamLogo.svg";
 import { users } from "@/Data/mockDB";
 
 export default function Login() {
   const navigate = useNavigate();
+  useEffect(() => {
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  if (isLoggedIn) {
+    navigate("/dashboard");
+  }
+}, [navigate]);
+
   const [formData, setFormData] = useState({
     identifier: "", // Can be email or ID
     password: "",

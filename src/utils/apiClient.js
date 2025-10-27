@@ -1,15 +1,24 @@
 import axios from 'axios';
+// import dotenv from 'dotenv';
 
+// Load environment variables
+// dotenv.config();
 // Get API base URL from environment variable
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+
+console.log('API Base URL:', API_BASE_URL); // Debug log to verify URL
+
+
 
 // Create axios instance with base configuration
 export const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 30000, // Increased timeout for network requests
   headers: {
     'Content-Type': 'application/json',
   },
+  // Add withCredentials if backend requires it
+  withCredentials: false,
 });
 
 // Request interceptor to add auth token automatically
@@ -19,9 +28,11 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    console.log('Making request to:', config.baseURL + config.url); // Debug log
     return config;
   },
   (error) => {
+    console.error('Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
@@ -32,6 +43,8 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
+    console.error('Response error:', error.response || error);
+    
     if (error.response?.status === 401) {
       // Token expired or invalid, clear localStorage
       localStorage.removeItem('token');
@@ -40,6 +53,12 @@ api.interceptors.response.use(
       // Optionally redirect to login
       window.location.href = '/login';
     }
+    
+    // Better error messages
+    if (error.code === 'ERR_NETWORK') {
+      console.error('Network error - check if backend is running and CORS is configured');
+    }
+    
     return Promise.reject(error);
   }
 );
